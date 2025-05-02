@@ -2,9 +2,9 @@ from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.appName("cleaning").getOrCreate()
 
-df = spark.read.parquet("bronze/airports.parquet")
+df = spark.read.csv("bronze/flights", header=True, inferSchema=True)
 
-df.createOrReplaceTempView("airports")
+df.createOrReplaceTempView("flights")
 
-query = spark.sql("select * from airports WHERE city_iata_code = 'PAR' ")
+query = spark.sql("select * from flights")
 query.show()

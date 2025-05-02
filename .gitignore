@@ -175,3 +175,8 @@ cython_debug/
 
 
 .idea
+archive/
+.cache.sqlite
+bronze/flights
+checkpoints/
+source/

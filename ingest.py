@@ -1,4 +1,4 @@
-import requests, json
+import requests
 from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.appName("ingest").getOrCreate()
@@ -20,8 +20,6 @@ for offset in range(100,total,100):
         left = total - data['pagination']['count']
 
 
+df = spark.createDataFrame(airports)
 
-
-print(len(airports))
-for airport in airports:
-    print(airport)
+df.write.format("parquet").save("bronze/airports.parquet")

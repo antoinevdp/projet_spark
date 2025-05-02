@@ -1,8 +1,11 @@
 from pyspark.sql import SparkSession
+from os.path import abspath
+import pyspark.sql.functions as F
 from pyspark.sql.types import StructType, StructField, StringType, DateType, BooleanType, TimestampType, DoubleType, \
     DecimalType
 
-spark = SparkSession.builder.appName('streaming').getOrCreate()
+spark = SparkSession.builder.appName('streaming').master("spark://localhost:7077")\
+    .config("spark.executor.memory", "16g").config("spark.executor.core", "8").getOrCreate()
 
 schema = StructType([
     StructField('FlightDate', DateType(), True),
@@ -70,11 +73,13 @@ schema = StructType([
 
 flights = spark.readStream.format("csv").schema(schema).option("header", True).csv("source")
 
-query = flights.writeStream\
-.format("csv")\
+flights_year_month_day = flights.withColumns({"FlightYear": F.year(F.col("FlightDate")),"FlightMonth": F.month(F.col("FlightDate")),"FlightDay": F.dayofmonth(F.col("FlightDate"))})
+
+query = flights_year_month_day.writeStream\
+.format("parquet")\
+.partitionBy("FlightYear","FlightMonth","FlightDay")\
 .outputMode("append") \
-.option("path", "bronze/flights")\
-.option("checkpointLocation", "checkpoints")\
-.option("header", "true")\
+.option("path", abspath("bronze/flights"))\
+.option("checkpointLocation", abspath("bronze/checkpoints/flights"))\
 .start()
 query.awaitTermination()

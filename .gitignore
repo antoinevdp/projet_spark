@@ -180,3 +180,5 @@ archive/
 bronze/flights
 checkpoints/
 source/
+metastore_db/
+silver-warehouse/

@@ -1,41 +1,27 @@
-import json
-import mysql.connector
+import requests, json
+from pyspark.sql import SparkSession
 
-# Load JSON
-with open("data2.json") as f:
-    json_data = json.load(f)
+spark = SparkSession.builder.appName("ingest").getOrCreate()
 
-# Connect to MySQL
-conn = mysql.connector.connect(
-    host="localhost",
-    user="tonio",
-    password="efrei1234",
-    database="flights"
-)
-cursor = conn.cursor()
+URL = f"https://api.aviationstack.com/v1/airports?access_key=8169fc0b517e5cdf325278ae336bede4&country_iso2=FR"
 
-# Prepare insert statement
-sql = """
-INSERT INTO cities (id, gmt, city_id, iata_code, country_iso2, geoname_id, latitude, longitude, city_name, timezone)
-VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-"""
+response = requests.get(URL)
+data = response.json()
 
-# Insert each record
-for record in json_data["data"]:
-    values = (
-        record["id"],
-        record["gmt"],
-        record["city_id"],
-        record["iata_code"],
-        record["country_iso2"],
-        record.get("geoname_id"),
-        record["latitude"],
-        record["longitude"],
-        record["city_name"],
-        record["timezone"]
-    )
-    cursor.execute(sql, values)
+airports = data['data']
+total = data['pagination']['total']
+left = total - data['pagination']['count']
+for offset in range(100,total,100):
+    if left > 0:
+        response = requests.get(
+            f"{URL}&offset={offset}")
+        data = response.json()
+        airports.extend(data['data'])
+        left = total - data['pagination']['count']
 
-conn.commit()
-cursor.close()
-conn.close()
+
+
+
+print(len(airports))
+for airport in airports:
+    print(airport)

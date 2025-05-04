@@ -73,11 +73,11 @@ schema = StructType([
 
 flights = spark.readStream.format("csv").schema(schema).option("header", True).csv("source")
 
-flights_year_month_day = flights.withColumns({"FlightYear": F.year(F.col("FlightDate")),"FlightMonth": F.month(F.col("FlightDate")),"FlightDay": F.dayofmonth(F.col("FlightDate"))})
+flights_year_month_day = flights.withColumns({"Year": F.year(F.col("FlightDate")),"Month": F.month(F.col("FlightDate")),"Day": F.dayofmonth(F.col("FlightDate"))})
 
 query = flights_year_month_day.writeStream\
 .format("parquet")\
-.partitionBy("FlightYear","FlightMonth","FlightDay")\
+.partitionBy("Year","Month","Day")\
 .outputMode("append") \
 .option("path", abspath("bronze/flights"))\
 .option("checkpointLocation", abspath("bronze/checkpoints/flights"))\

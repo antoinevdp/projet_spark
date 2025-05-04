@@ -177,7 +177,7 @@ cython_debug/
 .idea
 archive/
 .cache.sqlite
-bronze/flights
+bronze/
 checkpoints/
 source/
 metastore_db/

@@ -1,0 +1,3 @@
+pyspark
+mysql-connector-python
+requests

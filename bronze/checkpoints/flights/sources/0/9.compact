@@ -1,0 +1,11 @@
+v1
+{"path":"file:///home/tonio/Workspace/EFREI/projet_spark/source/Combined_Flights_2018.csv_part_1.csv","timestamp":1746464307347,"batchId":0}
+{"path":"file:///home/tonio/Workspace/EFREI/projet_spark/source/Combined_Flights_2018.csv_part_2.csv","timestamp":1746464312566,"batchId":1}
+{"path":"file:///home/tonio/Workspace/EFREI/projet_spark/source/Combined_Flights_2018.csv_part_3.csv","timestamp":1746464317672,"batchId":2}
+{"path":"file:///home/tonio/Workspace/EFREI/projet_spark/source/Combined_Flights_2018.csv_part_4.csv","timestamp":1746464322782,"batchId":3}
+{"path":"file:///home/tonio/Workspace/EFREI/projet_spark/source/Combined_Flights_2018.csv_part_5.csv","timestamp":1746464327941,"batchId":4}
+{"path":"file:///home/tonio/Workspace/EFREI/projet_spark/source/Combined_Flights_2018.csv_part_6.csv","timestamp":1746464333005,"batchId":5}
+{"path":"file:///home/tonio/Workspace/EFREI/projet_spark/source/Combined_Flights_2018.csv_part_7.csv","timestamp":1746464338094,"batchId":6}
+{"path":"file:///home/tonio/Workspace/EFREI/projet_spark/source/Combined_Flights_2018.csv_part_8.csv","timestamp":1746464343331,"batchId":7}
+{"path":"file:///home/tonio/Workspace/EFREI/projet_spark/source/Combined_Flights_2018.csv_part_9.csv","timestamp":1746464348431,"batchId":8}
+{"path":"file:///home/tonio/Workspace/EFREI/projet_spark/source/Combined_Flights_2018.csv_part_10.csv","timestamp":1746464353512,"batchId":9}

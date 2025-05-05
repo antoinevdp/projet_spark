@@ -47,12 +47,11 @@ def top_delay_by_weather(spark, flights_df, weather_df):
     weather_df.createOrReplaceTempView("weather")
 
     query = """
-                SELECT w.weather_code, MAX(f.ArrDelayMinutes)
+                SELECT w.weather_code,f.Airline, MAX(f.ArrDelayMinutes)
                 FROM flights as f
                 LEFT JOIN weather as w
                 ON f.Origin = w.location AND f.CRSDepTime_hourly = w.datetimeUTC
-                
-                GROUP BY w.weather_code 
+                GROUP BY w.weather_code, f.Airline
                 ORDER BY MAX(f.ArrDelayMinutes) DESC
             """
 
@@ -72,6 +71,22 @@ def top_delay_by_airline(spark, flights_df):
 
     df = spark.sql(query)
     return df
+
+def number_of_flights_by_airline(spark, flights_df):
+    flights_df.createOrReplaceTempView("flights")
+
+    query = """
+                SELECT *, CAST(total_delayed_flights/total_fligths AS double) as ratio FROM (
+                SELECT f.Airline, COUNT(*) as total_fligths, sum(case when f.ArrDelayMinutes> 0 then 1 else 0 end) as total_delayed_flights
+                FROM flights as f
+                GROUP BY f.Airline
+                )
+                ORDER BY ratio DESC
+            """
+
+    df = spark.sql(query)
+    return df
+
 
 def save_to_mysql(spark, df, table_name, properties):
     df.write \
@@ -93,7 +108,10 @@ if __name__ == "__main__":
     df2 = top_delay_during_snow(spark, flights_df, weather_df)
     df3 = top_delay_by_weather(spark, flights_df, weather_df)
     df4 = top_delay_by_airline(spark, flights_df)
+    df5 = number_of_flights_by_airline(spark, flights_df)
+
     save_to_mysql(spark, df1, "average_delay_by_company", properties)
     save_to_mysql(spark, df2, "top_delay_during_snow", properties)
     save_to_mysql(spark, df3, "top_delay_by_weather", properties)
     save_to_mysql(spark, df4, "top_delay_by_airline", properties)
+    save_to_mysql(spark, df5, "number_of_flights_by_airline", properties)

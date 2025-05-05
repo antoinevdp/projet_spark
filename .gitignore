@@ -176,9 +176,4 @@ cython_debug/
 
 .idea
 archive/
-.cache.sqlite
-bronze/
-checkpoints/
 source/
-metastore_db/
-silver-warehouse/
